@@ -1,21 +1,22 @@
 import os
-import atexit
 import io
-from fastapi import FastAPI, File, UploadFile, Query
 from PyPDF2 import PdfReader
-from langchain.text_splitter import CharacterTextSplitter
+from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain.embeddings.openai import OpenAIEmbeddings
 from langchain.vectorstores import FAISS
 from langchain.llms import OpenAI
+from langchain.memory import ConversationBufferMemory
 from langchain.chains import ConversationalRetrievalChain
-from langchain.callbacks import get_openai_callback
+from langchain.chat_models import ChatOpenAI
+from fastapi import FastAPI, File, UploadFile, Query
 from dotenv import load_dotenv
 
 app = FastAPI()
 
+# Load environment variables from .env file
 load_dotenv()
 
-# Define the directory to store uploaded PDF files
+# Define directory to store uploaded PDF files
 UPLOAD_DIR = "uploaded_pdfs"
 os.makedirs(UPLOAD_DIR, exist_ok=True)
 
@@ -26,8 +27,7 @@ def process_pdf(pdf_bytes: bytes) -> FAISS:
     text = ""
     for page in pdf_reader.pages:
         text += page.extract_text()
-    text_splitter = CharacterTextSplitter(
-        separator="\n",
+    text_splitter = RecursiveCharacterTextSplitter(
         chunk_size=1000,
         chunk_overlap=200,
         length_function=len
@@ -45,7 +45,11 @@ def cleanup():
             os.remove(file_path)
 
 # Register the cleanup function to be called when the Python interpreter exits
+import atexit
 atexit.register(cleanup)
+
+# @app.on_event("startup")
+# async def load_kb():
 
 # Endpoint to upload PDF file
 @app.post("/upload_pdf/")
@@ -56,28 +60,27 @@ async def upload_pdf(pdf: UploadFile = File(...)):
         with open(os.path.join(UPLOAD_DIR, pdf.filename), "wb") as f:
             f.write(pdf_bytes)
         # Process the PDF file as needed
-        knowledge_base = process_pdf(pdf_bytes)
+        global vector_space 
+        vector_space = process_pdf(pdf_bytes)
         return {"message": "PDF uploaded successfully"}
     except Exception as e:
         return {"error": str(e)}
 
 # Endpoint to search for a query in the PDF files
-@app.get("/search/{query}")
+@app.get("/search/")
 async def search(query: str = Query(...)):
     try:
-        # Create an OpenAI language model
-        openai = OpenAI(
-            api_key=os.getenv("OPENAI_API_KEY"),
-            model="gpt-3.5-turbo"
+        # Process uploaded PDF files
+        llm = ChatOpenAI()
+        memory = ConversationBufferMemory(memory_key='chat_history', return_messages=True)
+        # openai = OpenAI(api_key=os.getenv("OPENAI_API_KEY"), model="gpt-3.5-turbo")
+        chain = ConversationalRetrievalChain.from_llm(
+            llm=llm,
+            retriever=vector_space.as_retriever(),
+            memory = memory
         )
-        # Create a conversational retrieval chain
-        chain = ConversationalRetrievalChain(
-            vector_store=knowledge_base,
-            language_model=openai,
-            callbacks=[get_openai_callback(openai)]
-        )
-        # Search for the query in the PDF files
-        response = chain.search(query)
-        return response
+        response = chain({'question': query})
+        answer = response['chat_history'][-1].content
+        return {"response": answer}
     except Exception as e:
         return {"error": str(e)}
