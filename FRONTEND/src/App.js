@@ -8,12 +8,16 @@ function App() {
   const [error, setError] = useState('');
   const [image, setImage] = useState(null);
   const [pdf, setPdf] = useState(null);
+  const [submittedQuestion, setSubmittedQuestion] = useState('');
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
       const formData = new FormData();
-
+  
+      // Display the submitted question
+      setSubmittedQuestion(question);
+  
       if (model === 'gemini-vision' && image) {
         formData.append('image', image);
         const uploadResponse = await axios.post('http://127.0.0.1:8000/upload_image/', formData);
@@ -23,7 +27,7 @@ function App() {
         const uploadResponse = await axios.post('http://127.0.0.1:8000/upload_pdf/', formData);
         console.log(uploadResponse.data);
       }
-
+  
       const generateResponse = await axios.get(`http://127.0.0.1:8000/generate_text_gemini/?model_name=${model}&question=${question}`);
       setResponse(generateResponse.data['AI Response']);
       setError('');
@@ -36,6 +40,7 @@ function App() {
       }
     }
   };
+  
 
   const handleImageChange = (e) => {
     setImage(e.target.files[0]);
@@ -47,7 +52,7 @@ function App() {
 
   return (
     <div className="App">
-      <h1>AI Text Generation</h1>
+      <h1>SYNAPSE</h1>
       <form onSubmit={handleSubmit}>
         <label htmlFor="question">Question:</label>
         <input
@@ -91,8 +96,14 @@ function App() {
             />
           </>
         )}
-        <button type="submit">Generate Text</button>
+        <button type="submit">Submit</button>
       </form>
+      {submittedQuestion && (
+        <div>
+          <h2>Submitted Question:</h2>
+          <p>{submittedQuestion}</p>
+        </div>
+      )}
       {error && (
         <div className="error">
           <p>{error}</p>
