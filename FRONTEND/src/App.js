@@ -6,12 +6,26 @@ function App() {
   const [model, setModel] = useState('gemini-pro');
   const [response, setResponse] = useState('');
   const [error, setError] = useState('');
+  const [image, setImage] = useState(null);
+  const [pdf, setPdf] = useState(null);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const res = await axios.get(`http://127.0.0.1:8000/generate_text_gemini/?model_name=${model}&question=${question}`);
-      setResponse(res.data['AI Response']);
+      const formData = new FormData();
+
+      if (model === 'gemini-vision' && image) {
+        formData.append('image', image);
+        const uploadResponse = await axios.post('http://127.0.0.1:8000/upload_image/', formData);
+        console.log(uploadResponse.data);
+      } else if (model === 'pdf-gpt' && pdf) {
+        formData.append('pdf', pdf);
+        const uploadResponse = await axios.post('http://127.0.0.1:8000/upload_pdf/', formData);
+        console.log(uploadResponse.data);
+      }
+
+      const generateResponse = await axios.get(`http://127.0.0.1:8000/generate_text_gemini/?model_name=${model}&question=${question}`);
+      setResponse(generateResponse.data['AI Response']);
       setError('');
     } catch (error) {
       console.error('Error:', error);
@@ -21,6 +35,14 @@ function App() {
         setError('An error occurred while processing your request. Please try again later.');
       }
     }
+  };
+
+  const handleImageChange = (e) => {
+    setImage(e.target.files[0]);
+  };
+
+  const handlePdfChange = (e) => {
+    setPdf(e.target.files[0]);
   };
 
   return (
@@ -45,6 +67,30 @@ function App() {
           <option value="gemini-vision">Gemini Vision</option>
           <option value="pdf-gpt">PDF GPT</option>
         </select>
+        {model === 'gemini-vision' && (
+          <>
+            <label htmlFor="image">Upload Image:</label>
+            <input
+              type="file"
+              id="image"
+              accept="image/*"
+              onChange={handleImageChange}
+              required
+            />
+          </>
+        )}
+        {model === 'pdf-gpt' && (
+          <>
+            <label htmlFor="pdf">Upload PDF:</label>
+            <input
+              type="file"
+              id="pdf"
+              accept=".pdf"
+              onChange={handlePdfChange}
+              required
+            />
+          </>
+        )}
         <button type="submit">Generate Text</button>
       </form>
       {error && (

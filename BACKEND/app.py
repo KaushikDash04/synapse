@@ -10,6 +10,7 @@ from pydub import AudioSegment
 
 import google.generativeai as genai
 import PIL.Image
+import uuid
 
 #fastapi imports
 from fastapi import FastAPI, HTTPException, File, UploadFile, Query
@@ -82,7 +83,7 @@ genai.configure(api_key=api_key)
 def generate_text_vision(question):
     genai.configure(api_key=api_key)
 
-    img = PIL.Image.open('photos\hello.jpg')
+    img = PIL.Image.open(image_path)
 
     print("User Question: ", question)
 
@@ -132,10 +133,8 @@ def generate_text_pdf(question):
 #             "AI Response": processed_data}
 
 
-
-
 # Define directory to store uploaded PDF files
-UPLOAD_DIR = "uploaded_pdfs"
+UPLOAD_DIR = "uploaded_files"
 os.makedirs(UPLOAD_DIR, exist_ok=True)
 
 # Function to extract text from PDF and create embeddings
@@ -154,6 +153,19 @@ def process_pdf(pdf_bytes: bytes) -> FAISS:
     embeddings = OpenAIEmbeddings()
     knowledge_base = FAISS.from_texts(chunks, embeddings)
     return knowledge_base
+
+# Function to process uploaded image
+def image_path_generate(image_bytes: bytes) -> str:
+    # Generate unique filename
+    filename = f"image_{uuid.uuid4()}.jpg"
+    filepath = os.path.join(UPLOAD_DIR, filename)
+
+    # Save image file
+    with open(filepath, "wb") as f:
+        f.write(image_bytes)
+
+    # Return filepath
+    return filepath
 
 # Cleanup function to delete uploaded PDF files
 def cleanup():
@@ -177,6 +189,17 @@ async def upload_pdf(pdf: UploadFile = File(...)):
         global vector_space 
         vector_space = process_pdf(pdf_bytes)
         return {"message": "PDF uploaded successfully"}
+    except Exception as e:
+        return {"error": str(e)}
+    
+# Endpoint to upload Image file
+@app.post("/upload_image/")
+async def upload_image(image: UploadFile = File(...)):
+    try:
+        image_bytes = await image.read()
+        global image_path 
+        image_path = image_path_generate(image_bytes)
+        return {"message": "Image uploaded successfully", "image_path": image_path}
     except Exception as e:
         return {"error": str(e)}
 
