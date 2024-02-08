@@ -1,12 +1,10 @@
-import torch
-import soundfile as sf
-from transformers import AutoModelForSpeechSeq2Seq, AutoProcessor, pipeline, SpeechT5Processor, SpeechT5ForTextToSpeech, SpeechT5HifiGan
-from datasets import load_dataset
-import IPython.display as ipd
+# import torch
+# import soundfile as sf
+# from transformers import AutoModelForSpeechSeq2Seq, AutoProcessor, pipeline, SpeechT5Processor, SpeechT5ForTextToSpeech, SpeechT5HifiGan
+# from datasets import load_dataset
 
-import sounddevice as sd
-import soundfile as sf
-from pydub import AudioSegment
+# import sounddevice as sd
+# from pydub import AudioSegment
 
 import google.generativeai as genai
 import PIL.Image
