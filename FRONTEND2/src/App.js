@@ -8,6 +8,9 @@ function App() {
   const [error, setError] = useState('');
   const [image, setImage] = useState(null);
   const [pdf, setPdf] = useState(null);
+  const [submittedQuestion, setSubmittedQuestion] = useState('');
+  const [imagePreview, setImagePreview] = useState('');
+  const [pdfPreview, setPdfPreview] = useState('');
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -16,13 +19,17 @@ function App() {
 
       if (model === 'gemini-vision' && image) {
         formData.append('image', image);
+        setImagePreview(URL.createObjectURL(image));
         const uploadResponse = await axios.post('http://127.0.0.1:8000/upload_image/', formData);
         console.log(uploadResponse.data);
       } else if (model === 'pdf-gpt' && pdf) {
         formData.append('pdf', pdf);
+        setPdfPreview(URL.createObjectURL(pdf));
         const uploadResponse = await axios.post('http://127.0.0.1:8000/upload_pdf/', formData);
         console.log(uploadResponse.data);
       }
+
+      setSubmittedQuestion(question);
 
       const generateResponse = await axios.get(`http://127.0.0.1:8000/generate_text_gemini/?model_name=${model}&question=${question}`);
       setResponse(generateResponse.data['AI Response']);
@@ -47,7 +54,7 @@ function App() {
 
   return (
     <div className="App">
-      <h1>AI Text Generation</h1>
+      <h1>SYNAPSE</h1>
       <form onSubmit={handleSubmit}>
         <label htmlFor="question">Question:</label>
         <input
@@ -91,8 +98,26 @@ function App() {
             />
           </>
         )}
-        <button type="submit">Generate Text</button>
+        <button type="submit">Submit</button>
       </form>
+      {imagePreview && (
+        <div>
+          <h2>Uploaded Image:</h2>
+          <img src={imagePreview} alt="Uploaded" style={{ maxWidth: '100%', maxHeight: '200px' }} />
+        </div>
+      )}
+      {pdfPreview && (
+        <div>
+          <h2>Uploaded PDF:</h2>
+          <embed src={pdfPreview} type="application/pdf" width="50%" height="400px" />
+        </div>
+      )}
+      {submittedQuestion && (
+        <div>
+          <h2>Submitted Question:</h2>
+          <p>{submittedQuestion}</p>
+        </div>
+      )}
       {error && (
         <div className="error">
           <p>{error}</p>
