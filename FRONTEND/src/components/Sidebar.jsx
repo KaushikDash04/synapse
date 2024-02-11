@@ -23,21 +23,13 @@ function Sidebar({ imagePreview, pdfPreview }) { // Receive both imagePreview an
           <div className="new" style={{display:"flex", gap:"5px"}}><div style={{marginTop:"13px"}}><AddCircleOutlineSharpIcon/></div><h3>New Chat</h3></div></button>
         {imagePreview && (
           <div className="image">
-<<<<<<< HEAD
             <h2 color="white">Uploaded Image:</h2>
-=======
-            <h2>Uploaded Image:</h2>
->>>>>>> bbebe38890e40b5b517e6b48a63aadf9b7321fd8
             <img src={imagePreview} alt="Uploaded" style={{ maxWidth: '100%', maxHeight: '200px' }} />
           </div>
         )}
         {pdfPreview && (
           <div>
-<<<<<<< HEAD
             <h2 color="white">Uploaded PDF:</h2>
-=======
-            <h2>Uploaded PDF:</h2>
->>>>>>> bbebe38890e40b5b517e6b48a63aadf9b7321fd8
             <embed src={pdfPreview} type="application/pdf" width="100%" height="400px" />
           </div>
         )}

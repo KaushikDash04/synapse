@@ -124,30 +124,125 @@ function App() {
   };
 
   return (
-    <div className="App">
-      <h1>SYNAPSE</h1>
-      <form onSubmit={handleSubmit}>
-        <label htmlFor="question">Question:</label>
-        <input
-          type="text"
-          id="question"
-          value={question}
-          onChange={(e) => setQuestion(e.target.value)}
-          required
-        />
-        <label htmlFor="model">Select Model:</label>
-        <select
-          id="model"
-          value={model}
-          onChange={(e) => setModel(e.target.value)}
-        >
-          <option value="gemini-pro">Gemini Pro</option>
-          <option value="gemini-vision">Gemini Vision</option>
-          <option value="pdf-gpt">PDF GPT</option>
-        </select>
-        {model === 'gemini-vision' && (
-          <>
-            <label htmlFor="image">Upload Image:</label>
+    <>
+      <div
+        className="app-container"
+        style={{ display: "flex", opacity: "50%" }}
+      >
+        {/* Sidebar component */}
+        <Sidebar imagePreview={imagePreview} pdfPreview={pdfPreview} />
+
+        {/* Chatbot container */}
+        <div className="chatbot-container">
+          <div className="chatbot-header"></div>
+          <div
+            className="chatbot-chat-area"
+            style={{
+              backgroundColor: "#171717",
+              color: "#a7bfe8",
+              marginLeft: "320px",
+              padding: "50px",
+              maxHeight: "550px",
+              overflowY: "auto",
+              width: "1092px",
+            }}
+          >
+            {chatHistory.map((chat, index) => (
+              <div key={index} className="chatbot-message">
+                <p
+                  style={{
+                    textAlign: "right",
+                    padding: "10px",
+                    color: "violet",
+                  }}
+                >
+                  <PsychologyAltRoundedIcon sx={{ fontSize: 40, mt: "20px" }} />
+                  <strong>USER:</strong> <br />
+                  {chat.question}
+                </p>
+                <p className="synapse-message">
+                  <PsychologyRoundedIcon sx={{ fontSize: 40 }} />
+                  <strong>SYNAPSE:</strong> <br />
+                  {chat.loading ? (
+                    <TypingAnimation />
+                  ) : (
+                    <TypewriterAnimation text={chat.response} />
+                  )}
+                </p>
+              </div>
+            ))}
+
+            {/* Empty div to keep track of the bottom of the chat area */}
+            <div ref={chatBottomRef}></div>
+          </div>
+
+          {/* Chat input form */}
+          <form
+            onSubmit={handleSubmit}
+            className="chatbot-input-form"
+            style={{
+              backgroundColor: "transparent",
+              position: "fixed",
+              top: "-20px",
+              left: "430px",
+              width: "2000px",
+              gap: "5px",
+            }}
+          >
+            {/* Upload section */}
+            <div className="upload-section">
+              {(model === "gemini-vision" || model === "pdf-gpt") && (
+                <>
+                  <label
+                    htmlFor={model === "gemini-vision" ? "image" : "pdf"}
+                    className="upload-button"
+                    style={{ backgroundColor: "#2d2d2d", borderRadius: "12px" }}
+                  >
+                    <UploadFileIcon sx={{ mt: "10px", bgcolor: "#2d2d2d" }} />
+                  </label>
+                  <input
+                    type="file"
+                    id={model === "gemini-vision" ? "image" : "pdf"}
+                    accept={model === "gemini-vision" ? "image/*" : ".pdf"}
+                    onChange={
+                      model === "gemini-vision"
+                        ? handleImageChange
+                        : handlePdfChange
+                    }
+                    required
+                    className="file-input"
+                  />
+                </>
+              )}
+            </div>
+
+            {/* Model select form */}
+            <div className="model-select-form">
+              <label
+                htmlFor="model-select"
+                className="model-select-label"
+              ></label>
+              <select
+                id="model-select"
+                value={model}
+                onChange={(e) => setModel(e.target.value)}
+                className="model-select"
+                style={{
+                  marginTop: "20px",
+                  backgroundColor: "#2d2d2d",
+                  border: "none",
+                  borderRadius: "12px",
+                  width: "150px",
+                  color: "white",
+                }}
+              >
+                <option value="gemini-pro">Gemini Pro</option>
+                <option value="gemini-vision">Gemini Vision</option>
+                <option value="pdf-gpt">PDF GPT</option>
+              </select>
+            </div>
+
+            {/* Input field */}
             <input
               type="text"
               value={question}
@@ -196,31 +291,19 @@ function App() {
             </Button>
           </form>
         </div>
-      )}
-      {pdfPreview && (
-        <div>
-          <h2>Uploaded PDF:</h2>
-          <embed src={pdfPreview} type="application/pdf" width="50%" height="400px" />
-        </div>
-      )}
-      {submittedQuestion && (
-        <div>
-          <h2>Submitted Question:</h2>
-          <p>{submittedQuestion}</p>
-        </div>
-      )}
-      {error && (
-        <div className="error">
-          <p>{error}</p>
-        </div>
-      )}
-      {response && (
-        <div>
-          <h2>AI Response:</h2>
-          <p>{response}</p>
-        </div>
-      )}
-    </div>
+      </div>
+      <h5
+        className="foot"
+        style={{
+          position: "fixed",
+          color: "gray",
+          marginLeft: "740px",
+          marginTop: "570px",
+        }}
+      >
+        Synapse can make mistakes. Consider checking important information.
+      </h5>
+    </>
   );
 }
 
