@@ -49,7 +49,11 @@ button:hover {
   font-optical-sizing: auto;
   font-weight: 700;
   font-style: normal;
+<<<<<<< HEAD
   top: 600px;
+=======
+  top: 680px;
+>>>>>>> bbebe38890e40b5b517e6b48a63aadf9b7321fd8
 }
 
 .image {
