@@ -23,4 +23,4 @@ COPY .env /app/.env
 EXPOSE 80
 
 # Command to run the application using uvicorn
-CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "80", "--env-file", ".env"]
+CMD ["uvicorn", "app:app", "--host", "0.0.0.0", "--port", "80", "--env-file", ".env"]
