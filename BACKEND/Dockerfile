@@ -16,8 +16,11 @@ RUN apt-get update && apt-get install -y \
     ffmpeg \
  && rm -rf /var/lib/apt/lists/*
 
+# Copy the .env file into the container
+COPY .env /app/.env
+
 # Expose port 80 to the outside world
 EXPOSE 80
 
 # Command to run the application using uvicorn
-CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "80"]
+CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "80", "--env-file", ".env"]
