@@ -10,11 +10,17 @@ COPY . /app
 # Install any needed dependencies specified in requirements.txt
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Make port 80 available to the world outside this container
+# Install additional dependencies
+RUN apt-get update && apt-get install -y \
+    libsndfile1 \
+    ffmpeg \
+ && rm -rf /var/lib/apt/lists/*
+
+# Copy the .env file into the container
+COPY .env /app/.env
+
+# Expose port 80 to the outside world
 EXPOSE 80
 
-# Install python-dotenv to load environment variables from .env file
-RUN pip install python-dotenv
-
-# Run the application with Uvicorn ASGI server and load environment variables from .env file
-CMD ["python", "-m", "uvicorn", "app:app", "--host", "0.0.0.0", "--port", "80", "--env-file", ".env"]
+# Command to run the application using uvicorn
+CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "80", "--env-file", ".env"]
