@@ -16,6 +16,7 @@ import KeyboardDoubleArrowUpSharpIcon from "@mui/icons-material/KeyboardDoubleAr
 import PsychologyRoundedIcon from "@mui/icons-material/PsychologyRounded";
 import PsychologyAltRoundedIcon from "@mui/icons-material/PsychologyAltRounded";
 import TypewriterAnimation from "./TypewriterAnimation"; // Import the TypewriterAnimation component
+import TypingAnimation from "./TypingAnimation";
 
 function App() {
   const [question, setQuestion] = useState("");
@@ -25,6 +26,7 @@ function App() {
   const [image, setImage] = useState(null);
   const [pdf, setPdf] = useState(null);
   const [imagePreview, setImagePreview] = useState(null); // State to store image preview
+  const [pdfPreview, setPdfPreview] = useState(null); // State to store PDF preview
   const [chatHistory, setChatHistory] = useState([]);
   const [isLoading, setIsLoading] = useState(false); // Loading state
   const chatBottomRef = useRef(null); // Reference to the bottom of the chat area
@@ -47,9 +49,36 @@ function App() {
       // Set loading state to true while waiting for response
       setIsLoading(true);
 
+      // Create FormData object
+      const formData = new FormData();
+      formData.append("question", question);
+      formData.append("model_name", model);
+
+      // Add image file to FormData if available and model is gemini-vision
+      if (model === 'gemini-vision' && image) {
+        formData.append('image', image);
+        setImagePreview(URL.createObjectURL(image));
+        const uploadResponse = await axios.post('http://127.0.0.1:8000/upload_image/', formData);
+        console.log(uploadResponse.data);
+      }
+
+      // Add PDF file to FormData if available and model is pdf-gpt
+      if (model === 'pdf-gpt' && pdf) {
+        formData.append('pdf', pdf);
+        setPdfPreview(URL.createObjectURL(pdf));
+        const uploadResponse = await axios.post('http://127.0.0.1:8000/upload_pdf/', formData);
+        console.log(uploadResponse.data);
+      }
+
       // Make API call to get response
       const generateResponse = await axios.get(
-        `http://127.0.0.1:8000/generate_text_gemini/?model_name=${model}&question=${question}`
+        `http://127.0.0.1:8000/generate_text_gemini/?model_name=${model}&question=${question}`,
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
       );
       const newResponse = generateResponse.data["AI Response"];
 
@@ -88,7 +117,10 @@ function App() {
   };
 
   const handlePdfChange = (e) => {
-    setPdf(e.target.files[0]);
+    const file = e.target.files[0];
+    setPdf(file);
+    // Set PDF preview
+    setPdfPreview(URL.createObjectURL(file));
   };
 
   return (
@@ -98,7 +130,7 @@ function App() {
         style={{ display: "flex", opacity: "50%" }}
       >
         {/* Sidebar component */}
-        <Sidebar imagePreview={imagePreview} />
+        <Sidebar imagePreview={imagePreview} pdfPreview={pdfPreview} />
 
         {/* Chatbot container */}
         <div className="chatbot-container">
@@ -132,7 +164,7 @@ function App() {
                   <PsychologyRoundedIcon sx={{ fontSize: 40 }} />
                   <strong>SYNAPSE:</strong> <br />
                   {chat.loading ? (
-                    <TypewriterAnimation text="Thinking..." />
+                    <TypingAnimation />
                   ) : (
                     <TypewriterAnimation text={chat.response} />
                   )}

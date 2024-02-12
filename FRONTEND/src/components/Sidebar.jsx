@@ -30,7 +30,7 @@ function Sidebar({ imagePreview, pdfPreview }) { // Receive both imagePreview an
         {pdfPreview && (
           <div>
             <h2>Uploaded PDF:</h2>
-            <embed src={pdfPreview} type="application/pdf" width="50%" height="400px" />
+            <embed src={pdfPreview} type="application/pdf" width="100%" height="400px" />
           </div>
         )}
       </div>
