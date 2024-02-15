@@ -16,20 +16,20 @@ function Sidebar({ imagePreview, pdfPreview }) { // Receive both imagePreview an
     <div className="sidebar">
       {/* Sidebar content */}
       <div className="sidebar-content">
-        <h1>SYNAPSE     <AutoModeRoundedIcon/></h1>
+        <h1 href = "https://synapse-7fnqast6r-kaushikdash04s-projects.vercel.app">SYNAPSE     <AutoModeRoundedIcon/></h1>
          {/* Add any additional sidebar content here */}
          <button style={{width:"300px", borderRadius:"12px",display:"flex",marginTop:"20px"}}
          onClick={refreshPage}>
           <div className="new" style={{display:"flex", gap:"5px"}}><div style={{marginTop:"13px"}}><AddCircleOutlineSharpIcon/></div><h3>New Chat</h3></div></button>
         {imagePreview && (
           <div className="image">
-            <h2 color="white">Uploaded Image:</h2>
+{/*             <h2 color="white">Uploaded Image:</h2> */}
             <img src={imagePreview} alt="Uploaded" style={{ maxWidth: '100%', maxHeight: '200px' }} />
           </div>
         )}
         {pdfPreview && (
           <div>
-            <h2 color="white">Uploaded PDF:</h2>
+{/*             <h2 color="white">Uploaded PDF:</h2> */}
             <embed src={pdfPreview} type="application/pdf" width="100%" height="400px" />
           </div>
         )}
