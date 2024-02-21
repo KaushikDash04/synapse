@@ -58,7 +58,7 @@ function App() {
       if (model === 'gemini-vision' && image) {
         formData.append('image', image);
         setImagePreview(URL.createObjectURL(image));
-        const uploadResponse = await axios.post('http://127.0.0.1:8000/upload_image/', formData);
+        const uploadResponse = await axios.post('https://synapse-backend-urh6.onrender.com/upload_image/', formData);
         console.log(uploadResponse.data);
       }
 
@@ -66,13 +66,13 @@ function App() {
       if (model === 'pdf-gpt' && pdf) {
         formData.append('pdf', pdf);
         setPdfPreview(URL.createObjectURL(pdf));
-        const uploadResponse = await axios.post('http://127.0.0.1:8000/upload_pdf/', formData);
+        const uploadResponse = await axios.post('https://synapse-backend-urh6.onrender.com/upload_pdf/', formData);
         console.log(uploadResponse.data);
       }
 
       // Make API call to get response
       const generateResponse = await axios.get(
-        `http://127.0.0.1:8000/generate_text_gemini/?model_name=${model}&question=${question}`,
+        `https://synapse-backend-urh6.onrender.com/generate_text_gemini/?model_name=${model}&question=${question}`,
         formData,
         {
           headers: {
@@ -183,7 +183,7 @@ function App() {
             style={{
               backgroundColor: "transparent",
               position: "fixed",
-              top: "50px",
+              top: "-20px",
               left: "430px",
               width: "2000px",
               gap: "5px",
@@ -298,7 +298,7 @@ function App() {
           position: "fixed",
           color: "gray",
           marginLeft: "740px",
-          marginTop: "635px",
+          marginTop: "570px",
         }}
       >
         Synapse can make mistakes. Consider checking important information.
