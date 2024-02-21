@@ -1,11 +1,14 @@
+/* Sidebar.css */
+
+/* Desktop styles */
 .sidebar {
   max-width: 300px;
   height: 750px;
   background-color: #000000;
   padding: 20px;
-  position: fixed; /* Change from "static" to "fixed" */
-  top: 0; /* Position at the top */
-  left: 0; /* Position at the left */
+  position: fixed;
+  top: 0;
+  left: 0;
 }
 
 .sidebar-content {
@@ -19,18 +22,15 @@
   margin-bottom: 20px;
   color: #f0ebeb;
   font-family: "Montserrat", sans-serif;
-  font-optical-sizing: auto;
   font-weight: 700;
-  font-style: normal;
 }
 
 .new {
   color: #f0ebeb;
   font-family: "Montserrat", sans-serif;
-  font-optical-sizing: auto;
   font-weight: 700;
-  font-style: normal;
 }
+
 button {
   border: none;
   background-color: #3e3d3d;
@@ -39,32 +39,42 @@ button {
 
 button:hover {
   cursor: pointer;
-  /* border: 0px solid white; */
   background-color: #2d2d2d;
 }
+
 .developer {
   position: fixed;
   color: #f0ebeb;
   font-family: "Montserrat", sans-serif;
-  font-optical-sizing: auto;
   font-weight: 700;
-  font-style: normal;
   top: 680px;
 }
 
 .image {
   max-height: 200px;
 }
+
 .input {
   font-family: "Montserrat", sans-serif;
-  font-optical-sizing: auto;
   font-weight: 500;
-  font-style: normal;
 }
 
 .foot {
   font-family: "Montserrat", sans-serif;
-  font-optical-sizing: auto;
   font-weight: 500;
-  font-style: normal;
+}
+
+@media only screen and (max-width: 768px) {
+  .sidebar {
+    display: none; 
+  }
+
+  .incompatible-message {
+    display: block;
+    text-align: center;
+    padding: 20px;
+    color: #f0ebeb;
+    font-family: "Montserrat", sans-serif;
+    font-weight: 700;
+  }
 }

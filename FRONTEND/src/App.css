@@ -140,28 +140,47 @@ body {
   margin-right: 10px;
 }
 
-
-
 .chatbot-chat-area {
   padding-right: 20px;
 }
 .chatbot-chat-area::-webkit-scrollbar {
-  width: 3px; 
+  width: 3px;
 }
 
 /* Track style */
 .chatbot-chat-area::-webkit-scrollbar-track {
-  background: transparent; 
+  background: transparent;
 }
 
 /* Handle style */
 .chatbot-chat-area::-webkit-scrollbar-thumb {
-  background: #888; 
+  background: #888;
   border-radius: 5px;
 }
 
 /* Handle on hover */
 .chatbot-chat-area::-webkit-scrollbar-thumb:hover {
-  background: #555; 
+  background: #555;
 }
 
+.error-message {
+  display: none;
+}
+
+
+@media only screen and (max-width: 768px) {
+  .chatbot-container {
+    display: none;
+  }
+
+  .error-message {
+    margin-top: 300px;
+    justify-content: center;
+    display: block;
+    text-align: center;
+    padding: 20px;
+    color: #ffffff;
+    font-family: "Montserrat", sans-serif;
+    font-weight: 700;
+  }
+}

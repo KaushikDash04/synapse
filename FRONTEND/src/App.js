@@ -303,6 +303,10 @@ function App() {
       >
         Synapse can make mistakes. Consider checking important information.
       </h5>
+      {/* Error message for mobile devices */}
+      <div className="error-message">
+        Sorry, this website is not compatible with mobile devices yet. Please view it on a desktop or laptop.
+      </div>
     </>
   );
 }
