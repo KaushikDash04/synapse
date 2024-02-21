@@ -172,6 +172,9 @@ body {
   .chatbot-container {
     display: none;
   }
+  .foot{
+    visibility: hidden;
+  }
 
   .error-message {
     margin-top: 300px;
