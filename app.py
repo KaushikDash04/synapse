@@ -44,7 +44,7 @@ app.add_middleware(
     allow_headers=["*"]
 )
 
-api_key = "AIzaSyBPswRnrMGDkpzrBezeQZTUY-t0ZZGVtbI"
+api_key = "AIzaSyCyuO8VraoqwoztmztC2GVS3Jgc3jigW6k"
 genai.configure(api_key=api_key)
 
 # def load_voice_model():
