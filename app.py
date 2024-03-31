@@ -80,7 +80,7 @@ genai.configure()
 # prompt = generate_text()
 
 def generate_text_vision(question):
-    genai.configure(api_key=api_key)
+    genai.configure()
 
     img = PIL.Image.open(image_path)
 
