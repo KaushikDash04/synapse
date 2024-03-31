@@ -44,8 +44,7 @@ app.add_middleware(
     allow_headers=["*"]
 )
 
-api_key = "AIzaSyCyuO8VraoqwoztmztC2GVS3Jgc3jigW6k"
-genai.configure(api_key=api_key)
+genai.configure()
 
 # def load_voice_model():
     # device = "cuda:0" if torch.cuda.is_available() else "cpu"
