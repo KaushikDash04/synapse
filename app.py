@@ -117,22 +117,6 @@ def generate_text_pdf(question):
     except Exception as e:
         return {"error": str(e)}
     
-# Endpoint to receive GET requests
-# @app.get("/generate_text_gemini/")
-# async def get_generated_text(question: str, description: str):
-#     processed_data = generate_text_gemini(question)
-#     return {"User Question" : question,
-#             "Description" :  description,
-#             "AI Response": processed_data}
-
-# @app.get("/generate_text_vision/")
-# async def get_generated_text(question: str):
-#     processed_data = generate_text_vision(question)
-#     return {"User Question" : question, 
-#             "AI Response": processed_data}
-
-
-# Define directory to store uploaded PDF files
 UPLOAD_DIR = "uploaded_files"
 os.makedirs(UPLOAD_DIR, exist_ok=True)
 
