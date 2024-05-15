@@ -6,3 +6,6 @@ app_new.py
 app2.py
 sample.docx
 files/
+.env
+new.py
+requirements2.txt
