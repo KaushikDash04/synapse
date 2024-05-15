@@ -16,7 +16,7 @@ dataclasses-json==0.6.4
 distlib==0.3.8
 distro==1.9.0
 exceptiongroup==1.2.0
-faiss-cpu==1.7.4
+faiss-cpu==1.8.0
 fastapi==0.109.2
 filelock==3.13.1
 frozenlist==1.4.1
