@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import ReactMarkdown from 'react-markdown';
 
 const TypewriterAnimation = ({ text }) => {
   const [displayText, setDisplayText] = useState("");
@@ -19,7 +20,7 @@ const TypewriterAnimation = ({ text }) => {
     };
   }, [currentIndex, text]);
 
-  return <span>{displayText}</span>;
+  return <span><ReactMarkdown>{displayText}</ReactMarkdown></span>;
 };
 
 export default TypewriterAnimation;
