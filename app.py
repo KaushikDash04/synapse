@@ -56,7 +56,7 @@ def generate_text_vision(question):
 # Generating text for the conversation input (Gemini pro text model)
 def generate_text_gemini(question):
     print("User Question: ", question)
-    model = genai.GenerativeModel(model_name="gemini-1.5-flash")
+    model = genai.GenerativeModel(model_name="gemini-pro")
     response = model.generate_content([question])
     print("AI Answer: ")
     print(response.text)
@@ -85,7 +85,7 @@ def get_conversational_chain():
     Answer:
     """
 
-    model = ChatGoogleGenerativeAI(model="gemini-1.5-flash",
+    model = ChatGoogleGenerativeAI(model="gemini-pro",
                              temperature=0.3)
 
     prompt = PromptTemplate(template = prompt_template, input_variables = ["context", "question"])
