@@ -9,3 +9,5 @@ files/
 .env
 new.py
 requirements2.txt
+synapse/
+synapse-new/
